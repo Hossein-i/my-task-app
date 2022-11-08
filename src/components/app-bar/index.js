@@ -10,6 +10,7 @@ const AppBarComponent = ({ title, startAction, endAction }) => {
       <AppBar
         position="static"
         variant="outlined"
+        elevation={0}
         color="inherit"
         sx={{ borderRadius: "0 0 1rem 1rem" }}
       >
