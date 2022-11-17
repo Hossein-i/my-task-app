@@ -9,20 +9,19 @@ import {
 
 const AlertDialogComponent = ({
   open,
-  labelOk,
-  labelCancel,
-  colorOk,
-  colorCancel,
-  onOk,
-  onCancel,
+  labelAgree,
+  labelDisagree,
+  colorAgree,
+  colorDisagree,
+  onClose,
   title,
   description,
 }) => {
-  const handleOk = () => {
-    onOk();
+  const handleAgree = () => {
+    onClose(true);
   };
-  const handleCancel = () => {
-    onCancel();
+  const handleDisagree = () => {
+    onClose();
   };
 
   return (
@@ -30,7 +29,7 @@ const AlertDialogComponent = ({
       fullWidth
       maxWidth="sm"
       open={open}
-      onClose={handleCancel}
+      onClose={handleDisagree}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -41,11 +40,11 @@ const AlertDialogComponent = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel} color={colorCancel}>
-          {labelCancel}
+        <Button onClick={handleDisagree} color={colorDisagree}>
+          {labelDisagree}
         </Button>
-        <Button onClick={handleOk} color={colorOk} autoFocus>
-          {labelOk}
+        <Button onClick={handleAgree} color={colorAgree} autoFocus>
+          {labelAgree}
         </Button>
       </DialogActions>
     </Dialog>

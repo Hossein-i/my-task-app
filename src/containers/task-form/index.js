@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { add, put, remove } from "../../redux/slice/tasks/asyncThunk";
+import { useDispatch, useSelector } from "react-redux";
+import { put, remove } from "../../redux/slice/tasks/asyncThunk";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import moment from "moment";
@@ -31,48 +31,45 @@ const validationSchema = yup.object({
   editedAt: yup.date(),
 });
 
-const TaskFormContainer = ({ task, categories }) => {
+const TaskFormContainer = ({ task }) => {
+  const { categories, isLoading } = useSelector((store) => store.categories);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [openDialog, setOpenDialog] = useState(false);
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
   const formik = useFormik({
     initialValues: {
       id: task.id,
-      categoryId: task.categoryId || 3,
-      title: task.title || "",
-      completed: task.completed || false,
-      remindAt: task.remindAt || "",
-      dueDate: task.dueDate || moment().toISOString(),
-      repeat: task.repeat || "",
-      note: task.note || "",
-      createdAt: task.createdAt || moment().toISOString(),
+      categoryId: task.categoryId,
+      title: task.title,
+      completed: task.completed,
+      remindAt: task.remindAt,
+      dueDate: task.dueDate,
+      repeat: task.repeat,
+      note: task.note,
+      createdAt: task.createdAt,
       editedAt: moment().toISOString(),
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       const data = JSON.stringify(values);
-      if (values.id) {
-        dispatch(put(JSON.parse(data)));
-      } else {
-        dispatch(add(JSON.parse(data)));
-      }
+      dispatch(put(JSON.parse(data)));
       navigate(-1);
     },
   });
 
-  const handleOkDialog = () => {
-    dispatch(remove(task.id));
-    setOpenDialog(false);
-    navigate(-1);
-  };
-  const handleCancelDialog = () => {
-    setOpenDialog(false);
+  const handleClose = (agree) => {
+    setIsOpenDialog(false);
+
+    if (agree) {
+      dispatch(remove(task.id));
+      navigate(-1);
+    }
   };
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <AppBarComponent
-        title={task.title || "New Task"}
+        title={task.title}
         startAction={
           <IconButton
             size="large"
@@ -90,7 +87,7 @@ const TaskFormContainer = ({ task, categories }) => {
           <IconButton
             size="large"
             edge="end"
-            color="primary"
+            color="inherit"
             aria-label="submit"
             type="submit"
           >
@@ -103,23 +100,26 @@ const TaskFormContainer = ({ task, categories }) => {
           id="title"
           name="title"
           label="Title"
-          variant="filled"
           value={formik.values.title}
           onChange={formik.handleChange}
           error={formik.touched.title && Boolean(formik.errors.title)}
           helperText={formik.touched.title && formik.errors.title}
           required
         />
-        <SelectComponent
-          name="categoryId"
-          label="Category"
-          value={formik.values.categoryId}
-          onChange={formik.handleChange}
-          items={categories}
-          error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
-          helperText={formik.touched.categoryId && formik.errors.categoryId}
-          required
-        />
+        {!isLoading && (
+          <SelectComponent
+            name="categoryId"
+            label="Category"
+            value={formik.values.categoryId}
+            onChange={formik.handleChange}
+            items={categories}
+            error={
+              formik.touched.categoryId && Boolean(formik.errors.categoryId)
+            }
+            helperText={formik.touched.categoryId && formik.errors.categoryId}
+            required
+          />
+        )}
         <DateTimePickerComponent
           name="remindAt"
           label="Remind me"
@@ -149,7 +149,6 @@ const TaskFormContainer = ({ task, categories }) => {
           id="note"
           name="note"
           label="Note"
-          variant="filled"
           multiline
           rows={5}
           value={formik.values.note}
@@ -158,42 +157,40 @@ const TaskFormContainer = ({ task, categories }) => {
           helperText={formik.touched.note && formik.errors.note}
         />
       </Stack>
-      {task.id && (
-        <Stack spacing={1} py={2}>
-          <Typography variant="caption">
-            {moment(task.createdAt).format() ===
-            moment(task.editedAt).format() ? (
-              <>
-                Created on{" "}
-                {moment(task.createdAt).format("DD MMMM, YYYY - hh:mm A")}
-              </>
-            ) : (
-              <>
-                Edited on{" "}
-                {moment(task.editedAt).format("DD MMMM, YYYY - hh:mm A")}
-              </>
-            )}
-          </Typography>
-          <Button
-            variant="outlined"
-            color="error"
-            aria-label="delete"
-            startIcon={<Delete />}
-            onClick={() => {
-              setOpenDialog(true);
-            }}
-          >
-            Delete Task
-          </Button>
-        </Stack>
-      )}
+
+      <Stack spacing={1} py={2}>
+        <Typography variant="caption">
+          {moment(task.createdAt).format() ===
+          moment(task.editedAt).format() ? (
+            <>
+              Created on{" "}
+              {moment(task.createdAt).format("DD MMMM, YYYY - hh:mm A")}
+            </>
+          ) : (
+            <>
+              Edited on{" "}
+              {moment(task.editedAt).format("DD MMMM, YYYY - hh:mm A")}
+            </>
+          )}
+        </Typography>
+        <Button
+          variant="outlined"
+          color="error"
+          aria-label="delete"
+          startIcon={<Delete />}
+          onClick={() => {
+            setIsOpenDialog(true);
+          }}
+        >
+          Delete Task
+        </Button>
+      </Stack>
       <AlertDialogComponent
-        open={openDialog}
-        labelOk="Delete"
-        labelCancel="Cancel"
-        colorOk="error"
-        onOk={handleOkDialog}
-        onCancel={handleCancelDialog}
+        open={isOpenDialog}
+        labelAgree="Delete"
+        labelDisagree="Cancel"
+        colorAgree="error"
+        onClose={handleClose}
         title="Delete task"
         description={`"${task.title}" will be permanently deleted.`}
       />

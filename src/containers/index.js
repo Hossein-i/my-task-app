@@ -4,8 +4,8 @@ import BottomNavigationContainer from "./bottom-navigation";
 
 const Containers = () => {
   return (
-    <Container maxWidth='sm'>
-      <Box py={8}>
+    <Container maxWidth="sm">
+      <Box pt={8} pb={16}>
         <Outlet />
       </Box>
       <BottomNavigationContainer />

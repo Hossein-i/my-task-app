@@ -17,7 +17,7 @@ const SelectComponent = ({
   required,
 }) => {
   return (
-    <FormControl fullWidth variant="filled" required={required}>
+    <FormControl fullWidth required={required}>
       <InputLabel id={name + "-label"}>{label}</InputLabel>
       <Select
         labelId={name + "-label"}
