@@ -26,7 +26,7 @@ const HomeContainer = () => {
   return (
     <>
       <AppBarComponent title="My Task" />
-      <Stack spacing={4} pb={8}>
+      <Stack spacing={2}>
         <Box>
           <Typography variant="h6" component="h3" py={1}>
             Categories

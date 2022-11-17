@@ -35,7 +35,7 @@ const TasksListContainer = ({ tasks, categories, isLoading }) => {
           </TransitionGroup>
         )}
       </TasksListComponent>
-      {(!isLoading && !tasks.length) && (
+      {!isLoading && !tasks.length && (
         <TransitionGroup>
           <Fade>
             <Stack alignItems="center" spacing={2}>

@@ -1,5 +1,5 @@
 import { TextField } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 const DatePickerComponent = ({
@@ -12,11 +12,10 @@ const DatePickerComponent = ({
 }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <DatePicker
+      <MobileDatePicker
         renderInput={(props) => (
           <TextField
             {...props}
-            variant="filled"
             helperText={helperText}
             error={error}
             required={required}

@@ -18,7 +18,7 @@ const FabComponent = ({ bottom = 16, to }) => {
     >
       <Fab
         sx={{ pointerEvents: "all" }}
-        color="primary"
+        color="secondary"
         aria-label="add"
         LinkComponent={Link}
         to={to}

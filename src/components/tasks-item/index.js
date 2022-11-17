@@ -1,11 +1,11 @@
 import { Alarm, DateRange, Description, Repeat } from "@mui/icons-material";
 import {
   Checkbox,
-  Divider,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Paper,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
@@ -21,9 +21,12 @@ const TasksItemComponent = ({ task, category }) => {
     dispatch(put({ ...task, completed: !task.completed }));
 
   return (
-    <>
+    <Paper
+      variant="outlined"
+      sx={{ marginBottom: "0.5rem", borderRadius: "1rem", overflow: "hidden" }}
+    >
       <ListItem disablePadding>
-        <ListItemIcon>
+        <ListItemIcon sx={{ minWidth: "42px", paddingLeft: "0.5rem" }}>
           <Checkbox
             onClick={handleOnClick}
             checked={task.completed}
@@ -43,16 +46,25 @@ const TasksItemComponent = ({ task, category }) => {
             fontSize="16px"
             color="GrayText"
           >
-            <Typography variant="body2">{category?.name}</Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                padding: "0.125rem 0.5rem",
+                background: `linear-gradient(45deg, ${category?.color})`,
+                borderRadius: "0.5rem",
+                color: "#ffffff",
+              }}
+            >
+              {category?.name}
+            </Typography>
+            {task.remindAt && <Alarm fontSize="inherit" />}
             {task.dueDate && <DateRange fontSize="inherit" />}
             {task.repeat && <Repeat fontSize="inherit" />}
-            {task.remindAt && <Alarm fontSize="inherit" />}
             {task.note && <Description fontSize="inherit" />}
           </Stack>
         </ListItemButton>
       </ListItem>
-      <Divider variant="inset" component="li" />
-    </>
+    </Paper>
   );
 };
 

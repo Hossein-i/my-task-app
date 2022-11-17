@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 
 const CategoriesListComponent = ({ children }) => {
-  return <Grid container spacing={2}>{children}</Grid>;
+  return <Grid container spacing={1}>{children}</Grid>;
 };
 
 export default CategoriesListComponent;

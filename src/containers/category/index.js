@@ -75,9 +75,10 @@ const CategoryContainer = () => {
               <ArrowBack />
             </IconButton>
           }
+          color={filteredCategories(categories, id).color}
         />
       )}
-      <Stack spacing={2} pt={8}>
+      <Stack spacing={2} pt={9}>
         <DatePickerComponent
           name="date-filter"
           label="Date"
