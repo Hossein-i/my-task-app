@@ -5,7 +5,14 @@ const AppBarComponent = ({ title, startAction, endAction, color }) => {
   return (
     <Container
       maxWidth="sm"
-      sx={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 2 }}
+      sx={{
+        maxHeight: "3.5rem",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 2,
+      }}
     >
       <AppBar
         position="relative"
