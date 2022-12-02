@@ -6,7 +6,6 @@ const AppBarComponent = ({ title, startAction, endAction, color }) => {
     <Container
       maxWidth="sm"
       sx={{
-        maxHeight: "3.5rem",
         position: "fixed",
         top: 0,
         left: 0,
