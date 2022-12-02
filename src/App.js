@@ -15,7 +15,6 @@ import { tasks } from "./redux/slice/tasks/asyncThunk";
 import moment from "moment";
 import NewCategoryContainer from "./containers/new-category";
 import NewTaskContainer from "./containers/new-task";
-import { Paper } from "@mui/material";
 
 // const Containers = lazy(() => import("./containers"));
 // <Suspense fallback={<LoadingComponent />}></Suspense>
@@ -72,25 +71,23 @@ function App() {
   }, []);
 
   return (
-    <Paper elevation={1} sx={{ height: "100vh", borderRadius: "0" }}>
-      <Routes>
-        <Route path="/" element={<Containers />}>
-          <Route index element={<HomeContainer />} />
-          <Route path="categories" element={<CategoriesContainer />} />
-          <Route path="search" element={<SearchContainer />} />
-          <Route path="settings" element={<SettingsContainer />} />
-        </Route>
-        <Route path="/categories/:id" element={<CategoryContainer />} />
-        <Route
-          path="/categories/new-category"
-          element={<NewCategoryContainer />}
-        />
-        <Route path="/tasks/:id" element={<TaskContainer />} />
-        <Route path="/tasks/new-task" element={<NewTaskContainer />} />
-        <Route path="/not-found" element={<NotFoundContainer />} />
-        <Route path="*" element={<NotFoundContainer />} />
-      </Routes>
-    </Paper>
+    <Routes>
+      <Route path="/" element={<Containers />}>
+        <Route index element={<HomeContainer />} />
+        <Route path="categories" element={<CategoriesContainer />} />
+        <Route path="search" element={<SearchContainer />} />
+        <Route path="settings" element={<SettingsContainer />} />
+      </Route>
+      <Route path="/categories/:id" element={<CategoryContainer />} />
+      <Route
+        path="/categories/new-category"
+        element={<NewCategoryContainer />}
+      />
+      <Route path="/tasks/:id" element={<TaskContainer />} />
+      <Route path="/tasks/new-task" element={<NewTaskContainer />} />
+      <Route path="/not-found" element={<NotFoundContainer />} />
+      <Route path="*" element={<NotFoundContainer />} />
+    </Routes>
   );
 }
 

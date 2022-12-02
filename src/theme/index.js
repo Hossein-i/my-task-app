@@ -54,7 +54,11 @@ const CustomThemeProvider = ({ children }) => {
     } else {
       setMode(localTheme);
     }
-  }, [localTheme, prefersDarkMode]);
+
+    const html = document.getElementsByTagName("html")[0];
+    html.style.backgroundColor = mode === "dark" ? "#000" : "#fff";
+    html.style.color = mode === "dark" ? "#fff" : "#000";
+  }, [localTheme, mode, prefersDarkMode]);
 
   return (
     <CustomThemeContext.Provider value={{ mode, localTheme, colorMode }}>
