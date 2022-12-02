@@ -1,14 +1,16 @@
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, Delete } from "@mui/icons-material";
 import { Badge, IconButton, Stack } from "@mui/material";
 import { Container } from "@mui/system";
 import { PickersDay } from "@mui/x-date-pickers";
 import moment from "moment/moment";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import AlertDialogComponent from "../../components/alert-dialog";
 import AppBarComponent from "../../components/app-bar";
 import DatePickerComponent from "../../components/date-picker";
 import FabComponent from "../../components/fab";
+import { remove } from "../../redux/slice/categories/asyncThunk";
 import TasksListContainer from "../tasks-list";
 
 const filteredCategories = (categories, id) => {
@@ -38,6 +40,7 @@ const highlightedDays = (tasks, categoryId) => {
 };
 
 const CategoryContainer = () => {
+  const dispatch = useDispatch();
   const { categories, isLoading: isLoadingCategories } = useSelector(
     (store) => store.categories
   );
@@ -47,6 +50,7 @@ const CategoryContainer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [date, setDate] = useState(moment());
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   useEffect(() => {
     // If the id is incorrect...
@@ -56,6 +60,15 @@ const CategoryContainer = () => {
     )
       navigate("/not-found", { replace: true });
   }, [categories, id, isLoadingCategories, navigate]);
+
+  const handleClose = (agree) => {
+    setIsOpenDialog(false);
+
+    if (agree) {
+      dispatch(remove(Number(id)));
+      navigate(-1);
+    }
+  };
 
   return (
     <Container maxWidth="sm">
@@ -74,6 +87,21 @@ const CategoryContainer = () => {
             >
               <ArrowBack />
             </IconButton>
+          }
+          endAction={
+            !(id.includes(1) || id.includes(2) || id.includes(3)) && (
+              <IconButton
+                size="large"
+                edge="end"
+                color="inherit"
+                aria-label="delete"
+                onClick={() => {
+                  setIsOpenDialog(true);
+                }}
+              >
+                <Delete />
+              </IconButton>
+            )
           }
           color={filteredCategories(categories, id).color}
         />
@@ -108,6 +136,17 @@ const CategoryContainer = () => {
         />
       </Stack>
       <FabComponent to="/tasks/new-task" />
+      <AlertDialogComponent
+        open={isOpenDialog}
+        title="Delete category"
+        description={`"${
+          filteredCategories(categories, id).name
+        }" will be permanently deleted.`}
+        labelAgree="Delete"
+        labelDisagree="Cancel"
+        colorAgree="error"
+        onClose={handleClose}
+      />
     </Container>
   );
 };

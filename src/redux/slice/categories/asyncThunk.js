@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../../dexie";
+import { remove as removeTask } from "../tasks/asyncThunk";
 
 export const categories = createAsyncThunk(
   "categories/getCategoriesDB",
@@ -26,10 +27,14 @@ export const add = createAsyncThunk(
 );
 export const remove = createAsyncThunk(
   "categories/remove",
-  async ({ id }, thunkAPI) => {
+  async (args, thunkAPI) => {
     try {
-      await db.table("categories").delete(id);
-      return id;
+      await db.table("categories").delete(args);
+      const tasks = await db.table("tasks").toArray();
+      tasks.forEach((task) => {
+        if (task.categoryId === args) thunkAPI.dispatch(removeTask(task.id));
+      });
+      return args;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
